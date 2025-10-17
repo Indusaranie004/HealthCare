@@ -1,30 +1,40 @@
+// ============================================
+// UPDATED PaymentRequest DTO with Insurance Fields
+// Path: src/main/java/com/HealthCare/HealthCare/dto/PaymentRequest.java
+// ============================================
 package com.HealthCare.HealthCare.dto;
 
 public class PaymentRequest {
-    private Long billId;
-    private String paymentType;
+    // Common fields
+    private String billId;
+    private String paymentType; // "government", "insurance", "card"
     private Float amount;
 
-    // For Government
+    // ========== GOVERNMENT PAYMENT FIELDS ==========
     private String fundSource;
     private Float reqAmount;
     private String governmentId;
 
-    // For Insurance
+    // ========== INSURANCE PAYMENT FIELDS ==========
+    private Integer claimId;
     private String insurer;
     private String policyNumber;
+    private Float claimAmount;
+    private Long claimDate; // Epoch date
 
-    // For Card
+    // ========== CARD PAYMENT FIELDS ==========
     private String cardNumber;
     private String expiryDate;
     private String cvv;
 
-    // Getters and Setters
-    public Long getBillId() {
+    // ========== GETTERS AND SETTERS ==========
+
+    // Common
+    public String getBillId() {
         return billId;
     }
 
-    public void setBillId(Long billId) {
+    public void setBillId(String billId) {
         this.billId = billId;
     }
 
@@ -44,6 +54,7 @@ public class PaymentRequest {
         this.amount = amount;
     }
 
+    // Government Payment
     public String getFundSource() {
         return fundSource;
     }
@@ -68,6 +79,15 @@ public class PaymentRequest {
         this.governmentId = governmentId;
     }
 
+    // Insurance Payment
+    public Integer getClaimId() {
+        return claimId;
+    }
+
+    public void setClaimId(Integer claimId) {
+        this.claimId = claimId;
+    }
+
     public String getInsurer() {
         return insurer;
     }
@@ -84,6 +104,23 @@ public class PaymentRequest {
         this.policyNumber = policyNumber;
     }
 
+    public Float getClaimAmount() {
+        return claimAmount;
+    }
+
+    public void setClaimAmount(Float claimAmount) {
+        this.claimAmount = claimAmount;
+    }
+
+    public Long getClaimDate() {
+        return claimDate;
+    }
+
+    public void setClaimDate(Long claimDate) {
+        this.claimDate = claimDate;
+    }
+
+    // Card Payment
     public String getCardNumber() {
         return cardNumber;
     }

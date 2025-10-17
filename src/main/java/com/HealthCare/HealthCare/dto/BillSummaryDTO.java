@@ -1,11 +1,13 @@
 package com.HealthCare.HealthCare.dto;
 
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class BillSummaryDTO {
     private Long billId;
     private String hospitalName;
     private String hospitalLocation;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date issuedAt;
     private Float amount;
 

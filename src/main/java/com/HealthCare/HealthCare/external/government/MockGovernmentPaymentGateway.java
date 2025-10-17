@@ -22,7 +22,7 @@ public class MockGovernmentPaymentGateway implements GovernmentPaymentGateway {
             return new GovernmentPaymentResponse(
                     false,
                     0.0f,
-                    "Invalid government ID format"
+                    "Invalid government ID format. Expected format: GOV followed by 6 digits"
             );
         }
 
@@ -32,7 +32,7 @@ public class MockGovernmentPaymentGateway implements GovernmentPaymentGateway {
             return new GovernmentPaymentResponse(
                     false,
                     0.0f,
-                    "Government ID not found in system"
+                    "Government ID " + request.getGovernmentId() + " not found in system"
             );
         }
 
@@ -43,7 +43,7 @@ public class MockGovernmentPaymentGateway implements GovernmentPaymentGateway {
             return new GovernmentPaymentResponse(
                     false,
                     0.0f,
-                    "Patient not eligible for government funding"
+                    "Patient with government ID " + request.getGovernmentId() + " is not eligible for government funding"
             );
         }
 
@@ -52,7 +52,7 @@ public class MockGovernmentPaymentGateway implements GovernmentPaymentGateway {
             return new GovernmentPaymentResponse(
                     false,
                     0.0f,
-                    "Invalid payment amount"
+                    "Payment amount must be greater than zero"
             );
         }
 
@@ -61,7 +61,7 @@ public class MockGovernmentPaymentGateway implements GovernmentPaymentGateway {
             return new GovernmentPaymentResponse(
                     false,
                     0.0f,
-                    "Amount exceeds government fund limit of " + GovernmentFundConstants.MAX_FUND_LIMIT
+                    "Requested amount " + request.getReqAmount() + " exceeds government fund limit of " + GovernmentFundConstants.MAX_FUND_LIMIT
             );
         }
 

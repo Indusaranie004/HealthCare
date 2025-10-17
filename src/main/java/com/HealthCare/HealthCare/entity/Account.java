@@ -2,6 +2,7 @@ package com.HealthCare.HealthCare.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Account {
@@ -12,6 +13,7 @@ public class Account {
     private String userName;
     private String password;
     private String status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date createdAt;
 
     @OneToOne

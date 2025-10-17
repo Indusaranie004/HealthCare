@@ -1,6 +1,7 @@
 package com.HealthCare.HealthCare.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ public class Bill {
 
     private Float amount;
     private String status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date issuedAt;
 
     @ManyToOne
