@@ -148,7 +148,7 @@ const HomePage = () => {
     { title: "Scan Health Card", path: "/scan-health-card", icon: <FaIdCard size={40} /> },
     { title: "Patient Search", path: "/search-patients", icon: <FaSearch size={40} /> },
     { title: "System Settings", path: "/settings", icon: <FaCogs size={40} /> },
-    { title: "Performance Analytics", path: "/analytics", icon: <FaChartLine size={40} /> },
+    { title: "Performance Analytics", path: "/analyze", icon: <FaChartLine size={40} /> },
     { title: "Generate Reports", path: "/reports", icon: <FaFileAlt size={40} /> },
   ];
 

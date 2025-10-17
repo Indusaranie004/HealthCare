@@ -10,6 +10,7 @@ import CreateRecordForm from "./components/CreateRecordForm";
 import UpdateRecordForm from "./components/UpdateRecordForm";
 import RecordUpdatedSuccess from "./components/RecordUpdatedSuccess";
 import StaffLogin from "./components/StaffLogin";
+import Analyze from "./components/Analyze";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/create-medical-record/:patientId" element={<CreateRecordForm />} />
         <Route path="/update-medical-record/:recordId" element={<UpdateRecordForm />} />
         <Route path="/record-updated-success" element={<RecordUpdatedSuccess />} />
+        <Route path="/analyze" element={<Analyze />} />
         
       </Routes>
     </Router>
