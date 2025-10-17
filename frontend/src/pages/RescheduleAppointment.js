@@ -96,7 +96,7 @@ const RescheduleAppointment = ({ onNotify }) => { // ✅ Accept onNotify prop
                 if (selectedDoctor.availableDays.includes(dayName)) {
                     slots.push({
                         date: date.toISOString().split('T')[0],
-                        times: ['09:00', '10:00', '11:00', '14:00', '15:00']
+                        times: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
                     });
                 }
             }
