@@ -29,7 +29,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // disable CSRF for simplicity in development
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/staff/register", "/api/staff/login").permitAll()
                         .requestMatchers("/api/patients/**").permitAll() // allow public access to patient APIs
+                        .requestMatchers("/api/medical-records/**").permitAll() //allow medical records
                         .anyRequest().authenticated() // any other request requires authentication
                 )
                 .httpBasic(Customizer.withDefaults()); // enable basic HTTP authentication

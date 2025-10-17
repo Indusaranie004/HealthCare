@@ -85,19 +85,14 @@ public class Patient {
      */
     private String contactNumber;
 
-    /**
-     * Name of the patient's insurance provider.
-     */
-    private String insuranceProvider;
 
-    /**
-     * Insurance policy number.
-     */
-    private String policyNumber;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "insuranceProvider", column = @Column(name = "insurance_provider")),
+            @AttributeOverride(name = "policyNumber", column = @Column(name = "policy_number"))
+    })
+    private InsurancePayment insurancePayment;
 
-    /**
-     * QR code representing the patient's details. Stored as a Base64 string.
-     */
     @Lob
     private String qrCode;
 }

@@ -1,4 +1,4 @@
-package com.HealthCare.HealthCare.util;
+package com.HealthCare.HealthCare.patient.util;
 
 import com.HealthCare.HealthCare.patient.model.Patient;
 import com.google.zxing.BarcodeFormat;
@@ -30,14 +30,23 @@ public class QRCodeGenerator {
      * @throws IOException     if writing the QR code to byte stream fails
      */
     public static String generateQRCode(Patient patient) throws WriterException, IOException {
+        // Handle null insurance info gracefully
+        String insuranceProvider = patient.getInsurancePayment() != null
+                ? patient.getInsurancePayment().getInsuranceProvider()
+                : "N/A";
+
+        String policyNumber = patient.getInsurancePayment() != null
+                ? patient.getInsurancePayment().getPolicyNumber()
+                : "N/A";
+
         // Build the content to encode in the QR code
         String content = "PatientID: " + patient.getPatientId() + "\n" +
                 "Name: " + patient.getFirstName() + " " + patient.getLastName() + "\n" +
                 "DOB: " + patient.getDob() + "\n" +
                 "Address: " + patient.getAddress() + "\n" +
                 "Contact: " + patient.getContactNumber() + "\n" +
-                "Insurance: " + patient.getInsuranceProvider() + "\n" +
-                "Policy: " + patient.getPolicyNumber() + "\n" +
+                "Insurance: " + insuranceProvider + "\n" +
+                "Policy: " + policyNumber + "\n" +
                 "Status: " + patient.getStatus();
 
         // Generate QR code using ZXing library

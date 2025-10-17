@@ -3,9 +3,10 @@ package com.HealthCare.HealthCare.patient.service;
 import com.HealthCare.HealthCare.patient.dto.PatientRequest;
 import com.HealthCare.HealthCare.patient.dto.PatientResponse;
 import com.HealthCare.HealthCare.patient.model.Patient;
+import com.HealthCare.HealthCare.patient.model.InsurancePayment;
 import com.HealthCare.HealthCare.patient.repository.PatientRepository;
 import com.HealthCare.HealthCare.exception.ResourceNotFoundException;
-import com.HealthCare.HealthCare.util.QRCodeGenerator;
+import com.HealthCare.HealthCare.patient.util.QRCodeGenerator;
 import com.google.zxing.WriterException;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class PatientService {
 
     private final PatientRepository patientRepository;
+
 
     public PatientService(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
@@ -103,18 +105,12 @@ public class PatientService {
 
     /**
      * Searches patients by multiple optional fields.
-     *
-     * @param firstName  optional first name
-     * @param lastName   optional last name
-     * @param dob        optional date of birth
-     * @param status     optional status
-     * @param department optional department
-     * @return list of matching patient response DTOs
      */
-    public List<PatientResponse> searchPatients(String firstName, String lastName, LocalDate dob,
+    public List<PatientResponse> searchPatients(Long patientId,String firstName, String lastName, LocalDate dob,
                                                 String status, String department) {
         return patientRepository.findAll().stream()
-                .filter(p -> (firstName == null || p.getFirstName().toLowerCase().contains(firstName.toLowerCase())) &&
+                .filter(p -> (patientId == null || p.getPatientId().equals(patientId)) &&
+                        (firstName == null || p.getFirstName().toLowerCase().contains(firstName.toLowerCase())) &&
                         (lastName == null || p.getLastName().toLowerCase().contains(lastName.toLowerCase())) &&
                         (dob == null || dob.equals(p.getDob())) &&
                         (status == null || p.getStatus().equalsIgnoreCase(status)) &&
@@ -143,14 +139,19 @@ public class PatientService {
                 .lastVisitTo(patient.getLastVisitTo())
                 .address(patient.getAddress())
                 .contactNumber(patient.getContactNumber())
-                .insuranceProvider(patient.getInsuranceProvider())
-                .policyNumber(patient.getPolicyNumber())
+                .insuranceProvider(
+                        patient.getInsurancePayment() != null ? patient.getInsurancePayment().getInsuranceProvider() : null
+                )
+                .policyNumber(
+                        patient.getInsurancePayment() != null ? patient.getInsurancePayment().getPolicyNumber() : null
+                )
                 .qrCode(patient.getQrCode())
                 .build();
     }
 
     private Patient mapToEntity(PatientRequest request) {
         return Patient.builder()
+
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .dob(request.getDob())
@@ -161,8 +162,12 @@ public class PatientService {
                 .lastVisitTo(request.getLastVisitTo())
                 .address(request.getAddress())
                 .contactNumber(request.getContactNumber())
-                .insuranceProvider(request.getInsuranceProvider())
-                .policyNumber(request.getPolicyNumber())
+                .insurancePayment(
+                        InsurancePayment.builder()
+                                .insuranceProvider(request.getInsuranceProvider())
+                                .policyNumber(request.getPolicyNumber())
+                                .build()
+                )
                 .build();
     }
 
@@ -177,7 +182,12 @@ public class PatientService {
         patient.setLastVisitTo(request.getLastVisitTo());
         patient.setAddress(request.getAddress());
         patient.setContactNumber(request.getContactNumber());
-        patient.setInsuranceProvider(request.getInsuranceProvider());
-        patient.setPolicyNumber(request.getPolicyNumber());
+
+        if (patient.getInsurancePayment() == null) {
+            patient.setInsurancePayment(new InsurancePayment());
+        }
+
+        patient.getInsurancePayment().setInsuranceProvider(request.getInsuranceProvider());
+        patient.getInsurancePayment().setPolicyNumber(request.getPolicyNumber());
     }
 }

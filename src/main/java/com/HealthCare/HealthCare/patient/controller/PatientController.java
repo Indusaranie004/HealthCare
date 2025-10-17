@@ -63,7 +63,7 @@ public class PatientController {
      * @return patient response DTO
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PatientResponse> getPatientById(@PathVariable Long id) {
+    public ResponseEntity<PatientResponse> getPatientById(@PathVariable("id") Long id) {
         PatientResponse patient = patientService.getPatientById(id);
         return ResponseEntity.ok(patient);
     }
@@ -78,12 +78,15 @@ public class PatientController {
      * @throws WriterException if QR code encoding fails
      */
     @PutMapping("/{id}")
-    public ResponseEntity<PatientResponse> updatePatient(@PathVariable Long id,
-                                                         @RequestBody PatientRequest request)
+    public ResponseEntity<PatientResponse> updatePatient(
+            @PathVariable("id") Long id,  // ✅ Explicit name
+            @RequestBody PatientRequest request)
             throws IOException, WriterException {
         PatientResponse response = patientService.updatePatient(id, request);
         return ResponseEntity.ok(response);
     }
+
+
 
     /**
      * Deletes a patient by ID.
@@ -92,11 +95,10 @@ public class PatientController {
      * @return HTTP 204 No Content
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePatient(@PathVariable("id") Long id) {
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
-
     /**
      * Searches patients by optional fields: firstName, lastName, dob, status, department.
      *
@@ -109,13 +111,14 @@ public class PatientController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<PatientResponse>> searchPatients(
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String department
+            @RequestParam(value = "patientId", required = false) Long patientId,
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "dob", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "department", required = false) String department
     ) {
-        List<PatientResponse> results = patientService.searchPatients(firstName, lastName, dob, status, department);
+        List<PatientResponse> results = patientService.searchPatients(patientId,firstName, lastName, dob, status, department);
         return ResponseEntity.ok(results);
     }
 }
