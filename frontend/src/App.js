@@ -38,7 +38,7 @@ function App() {
               <img
                 src="/logo.png"
                 alt="Smart Healthcare Logo"
-                height="50"
+                height="70"
                 className="me-2"
               />
               <span className="text-white fw-bold">SmartHealth</span>

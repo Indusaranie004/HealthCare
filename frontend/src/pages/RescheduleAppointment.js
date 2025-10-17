@@ -131,7 +131,7 @@ const RescheduleAppointment = ({ onNotify }) => { // ✅ Accept onNotify prop
 
             navigate('/appointments');
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to reschedule.');
+            setError(err.response?.data?.message || 'This slot is altrady booked!.');
         } finally {
             setLoading(false);
         }

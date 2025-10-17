@@ -73,9 +73,9 @@ const ViewAppointments = () => {
                             <Badge bg={getStatusVariant(appt.status)} pill>
                                 {appt.status}
                             </Badge>
-                            {appt.status === 'Booked' && (
+                            {/* ✅ Show buttons for Booked AND Rescheduled */}
+                            {appt.status !== 'Cancelled' && (
                                 <div className="mt-2">
-                                    {/* Reschedule Button - Blue */}
                                     <Button
                                         size="sm"
                                         variant="primary"
@@ -89,7 +89,6 @@ const ViewAppointments = () => {
                                     >
                                         Reschedule
                                     </Button>
-                                    {/* Cancel Button - Red */}
                                     <Button
                                         size="sm"
                                         variant="danger"

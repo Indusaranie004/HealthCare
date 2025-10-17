@@ -131,7 +131,7 @@ const BookAppointment = ({ onNotify }) => {
             setStep(5);
         } catch (err) {
             // ✅ Show exact backend error message
-            const errorMessage = err.response?.data?.message || 'Failed to book appointment.';
+            const errorMessage = err.response?.data?.message || 'This slot is alreay booked.';
             setError(errorMessage);
         } finally {
             setLoading(false);
