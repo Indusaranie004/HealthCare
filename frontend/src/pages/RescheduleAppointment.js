@@ -10,7 +10,7 @@ import {
   getPatientAppointments
 } from '../services/appointmentService';
 
-const RescheduleAppointment = () => {
+const RescheduleAppointment = ({ onNotify }) => { // ✅ Accept onNotify prop
     const { id } = useParams();
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
@@ -123,7 +123,13 @@ const RescheduleAppointment = () => {
                 serviceTypeId: selectedServiceType.id,
                 dateTime
             });
-            navigate('/appointments', { state: { message: 'Appointment rescheduled successfully!' } });
+
+            // ✅ Send notification to global bell
+            if (onNotify) {
+                onNotify('Your appointment has been rescheduled successfully!');
+            }
+
+            navigate('/appointments');
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to reschedule.');
         } finally {
@@ -145,7 +151,6 @@ const RescheduleAppointment = () => {
                 </Card.Body>
             </Card>
 
-            {/* Reuse same steps as booking */}
             {step === 1 && (
                 <Card>
                     <Card.Header as="h5" style={{ backgroundColor: '#1E88E5', color: 'white' }}>Step 1: Select Hospital</Card.Header>
@@ -172,7 +177,7 @@ const RescheduleAppointment = () => {
                             variant="primary"
                             onClick={() => selectedHospital ? setStep(2) : setError('Please select a hospital.')}
                             disabled={!selectedHospital}
-                            style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                            style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                             className="mt-3"
                         >
                             Next
@@ -209,7 +214,7 @@ const RescheduleAppointment = () => {
                                 variant="primary"
                                 onClick={() => selectedServiceType ? setStep(3) : setError('Please select a service type.')}
                                 disabled={!selectedServiceType}
-                                style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                                style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                             >
                                 Next
                             </Button>
@@ -250,7 +255,7 @@ const RescheduleAppointment = () => {
                                 variant="primary"
                                 onClick={() => selectedDoctor ? setStep(4) : setError('Please select a doctor.')}
                                 disabled={!selectedDoctor}
-                                style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                                style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                             >
                                 Next: Select Time Slot
                             </Button>
@@ -296,7 +301,7 @@ const RescheduleAppointment = () => {
                                 variant="primary"
                                 onClick={handleReschedule}
                                 disabled={!selectedSlot}
-                                style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                                style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                             >
                                 Confirm Reschedule
                             </Button>

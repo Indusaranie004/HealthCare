@@ -8,9 +8,8 @@ import {
   getDoctors,
   bookAppointment
 } from '../services/appointmentService';
-import NotificationToast from '../components/NotificationToast';
 
-const BookAppointment = () => {
+const BookAppointment = ({ onNotify }) => {
     const navigate = useNavigate();
     const [step, setStep] = useState(1);
     const [hospitals, setHospitals] = useState([]);
@@ -23,10 +22,11 @@ const BookAppointment = () => {
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
 
     const patientId = 1; // Mock
+
+    // Clear error when selections change
+    const clearError = () => setError('');
 
     // Fetch hospitals
     useEffect(() => {
@@ -47,6 +47,7 @@ const BookAppointment = () => {
     // Fetch service types
     useEffect(() => {
         if (selectedHospital) {
+            clearError();
             const fetchServiceTypes = async () => {
                 try {
                     setLoading(true);
@@ -65,6 +66,7 @@ const BookAppointment = () => {
     // Fetch doctors
     useEffect(() => {
         if (selectedHospital && selectedServiceType) {
+            clearError();
             const fetchDoctors = async () => {
                 try {
                     setLoading(true);
@@ -80,19 +82,23 @@ const BookAppointment = () => {
         }
     }, [selectedHospital, selectedServiceType]);
 
-    // Generate mock slots (7 days, weekdays only)
+    // Generate slots ONLY for days the doctor is available
     useEffect(() => {
         if (selectedDoctor) {
+            clearError();
             const slots = [];
             const today = new Date();
             for (let i = 0; i < 7; i++) {
                 const date = new Date(today);
                 date.setDate(today.getDate() + i);
-                if (date.getDay() === 0 || date.getDay() === 6) continue; // Skip weekends
-                slots.push({
-                    date: date.toISOString().split('T')[0],
-                    times: ['09:00', '10:00', '11:00', '14:00', '15:00']
-                });
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+                // ✅ Only include days the doctor is available
+                if (selectedDoctor.availableDays.includes(dayName)) {
+                    slots.push({
+                        date: date.toISOString().split('T')[0],
+                        times: ['09:00', '10:00', '11:00', '14:00', '15:00']
+                    });
+                }
             }
             setAvailableSlots(slots);
         }
@@ -100,6 +106,7 @@ const BookAppointment = () => {
 
     const handleSlotSelect = (date, time) => {
         setSelectedSlot({ date, time });
+        clearError(); // Clear error when slot is selected
     };
 
     const handleBook = async () => {
@@ -119,11 +126,13 @@ const BookAppointment = () => {
                 dateTime
             });
 
-            setSuccessMessage(`Your appointment is confirmed for ${selectedSlot.date} at ${selectedSlot.time}!`);
-            setShowSuccess(true);
+            const message = `Your appointment is confirmed for ${selectedSlot.date} at ${selectedSlot.time}!`;
+            if (onNotify) onNotify(message);
             setStep(5);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to book appointment.');
+            // ✅ Show exact backend error message
+            const errorMessage = err.response?.data?.message || 'Failed to book appointment.';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -140,7 +149,10 @@ const BookAppointment = () => {
                         {hospitals.map(h => (
                             <Col key={h.id} md={4} className="mb-3">
                                 <Card
-                                    onClick={() => setSelectedHospital(h)}
+                                    onClick={() => {
+                                        setSelectedHospital(h);
+                                        clearError();
+                                    }}
                                     style={{
                                         cursor: 'pointer',
                                         border: selectedHospital?.id === h.id ? '2px solid #1E88E5' : '1px solid #dee2e6'
@@ -159,7 +171,7 @@ const BookAppointment = () => {
                     variant="primary"
                     onClick={() => selectedHospital ? setStep(2) : setError('Please select a hospital.')}
                     disabled={!selectedHospital}
-                    style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                    style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                     className="mt-3"
                 >
                     Next: Select Service Type
@@ -179,7 +191,10 @@ const BookAppointment = () => {
                         {serviceTypes.map(s => (
                             <Col key={s.id} md={6} className="mb-3">
                                 <Card
-                                    onClick={() => setSelectedServiceType(s)}
+                                    onClick={() => {
+                                        setSelectedServiceType(s);
+                                        clearError();
+                                    }}
                                     style={{
                                         cursor: 'pointer',
                                         border: selectedServiceType?.id === s.id ? '2px solid #1E88E5' : '1px solid #dee2e6'
@@ -200,7 +215,7 @@ const BookAppointment = () => {
                         variant="primary"
                         onClick={() => selectedServiceType ? setStep(3) : setError('Please select a service type.')}
                         disabled={!selectedServiceType}
-                        style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                        style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                     >
                         Next: Select Doctor
                     </Button>
@@ -220,7 +235,10 @@ const BookAppointment = () => {
                         {doctors.map(d => (
                             <Col key={d.id} md={4} className="mb-3">
                                 <Card
-                                    onClick={() => setSelectedDoctor(d)}
+                                    onClick={() => {
+                                        setSelectedDoctor(d);
+                                        clearError();
+                                    }}
                                     style={{
                                         cursor: 'pointer',
                                         border: selectedDoctor?.id === d.id ? '2px solid #1E88E5' : '1px solid #dee2e6'
@@ -245,7 +263,7 @@ const BookAppointment = () => {
                         variant="primary"
                         onClick={() => selectedDoctor ? setStep(4) : setError('Please select a doctor.')}
                         disabled={!selectedDoctor}
-                        style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                        style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                     >
                         Next: Select Time Slot
                     </Button>
@@ -263,32 +281,36 @@ const BookAppointment = () => {
                 {loading ? <Spinner animation="border" /> : error ? <Alert variant="danger">{error}</Alert> : (
                     <>
                         <h6>Select a date and time:</h6>
-                        {availableSlots.map((slot, idx) => (
-                            <div key={idx} className="mb-3">
-                                <h6>{new Date(slot.date).toLocaleDateString()}</h6>
-                                <Row>
-                                    {slot.times.map(time => {
-                                        const isSelected = selectedSlot?.date === slot.date && selectedSlot?.time === time;
-                                        return (
-                                            <Col key={time} xs={6} sm={4} md={3} className="mb-2">
-                                                <Button
-                                                    variant={isSelected ? "success" : "outline-secondary"}
-                                                    onClick={() => handleSlotSelect(slot.date, time)}
-                                                    style={{
-                                                        width: '100%',
-                                                        backgroundColor: isSelected ? '#4CAF50' : 'transparent',
-                                                        borderColor: isSelected ? '#4CAF50' : '#dee2e6',
-                                                        color: isSelected ? 'white' : 'black'
-                                                    }}
-                                                >
-                                                    {time}
-                                                </Button>
-                                            </Col>
-                                        );
-                                    })}
-                                </Row>
-                            </div>
-                        ))}
+                        {availableSlots.length > 0 ? (
+                            availableSlots.map((slot, idx) => (
+                                <div key={idx} className="mb-3">
+                                    <h6>{new Date(slot.date).toLocaleDateString()}</h6>
+                                    <Row>
+                                        {slot.times.map(time => {
+                                            const isSelected = selectedSlot?.date === slot.date && selectedSlot?.time === time;
+                                            return (
+                                                <Col key={time} xs={6} sm={4} md={3} className="mb-2">
+                                                    <Button
+                                                        variant={isSelected ? "success" : "outline-secondary"}
+                                                        onClick={() => handleSlotSelect(slot.date, time)}
+                                                        style={{
+                                                            width: '100%',
+                                                            backgroundColor: isSelected ? '#4CAF50' : 'transparent',
+                                                            borderColor: isSelected ? '#4CAF50' : '#dee2e6',
+                                                            color: isSelected ? 'white' : 'black'
+                                                        }}
+                                                    >
+                                                        {time}
+                                                    </Button>
+                                                </Col>
+                                            );
+                                        })}
+                                    </Row>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-muted">No available slots for this doctor in the next 7 days.</p>
+                        )}
                     </>
                 )}
                 <div className="mt-3">
@@ -297,7 +319,7 @@ const BookAppointment = () => {
                         variant="primary"
                         onClick={handleBook}
                         disabled={!selectedSlot}
-                        style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                        style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                     >
                         Confirm Booking
                     </Button>
@@ -314,11 +336,11 @@ const BookAppointment = () => {
             <Card.Body className="text-center">
                 <i className="fas fa-check-circle fa-5x text-success mb-3"></i>
                 <h4>Your appointment is confirmed!</h4>
-                <p>{successMessage}</p>
+                <p>Your appointment details have been sent to your notification center.</p>
                 <Button
                     variant="primary"
                     onClick={() => navigate('/')}
-                    style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5' }}
+                    style={{ backgroundColor: '#1E88E5', borderColor: '#1E88E5', color: 'white' }}
                 >
                     Return to Dashboard
                 </Button>
@@ -337,13 +359,6 @@ const BookAppointment = () => {
             {step === 3 && renderStep3()}
             {step === 4 && renderStep4()}
             {step === 5 && renderStep5()}
-
-            <NotificationToast
-                show={showSuccess}
-                onClose={() => setShowSuccess(false)}
-                message={successMessage}
-                variant="success"
-            />
 
             {loading && (
                 <div style={{

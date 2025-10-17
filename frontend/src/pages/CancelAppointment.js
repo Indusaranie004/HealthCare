@@ -4,7 +4,7 @@ import { Container, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { cancelAppointment, getPatientAppointments } from '../services/appointmentService';
 
-const CancelAppointment = () => {
+const CancelAppointment = ({ onNotify }) => { // ✅ Accept onNotify prop
     const { id } = useParams();
     const navigate = useNavigate();
     const [appointment, setAppointment] = useState(null);
@@ -34,7 +34,13 @@ const CancelAppointment = () => {
         try {
             setLoading(true);
             await cancelAppointment(id);
-            navigate('/appointments', { state: { message: 'Appointment cancelled successfully.' } });
+
+            // ✅ Send notification to global bell
+            if (onNotify) {
+                onNotify('Your appointment has been cancelled.');
+            }
+
+            navigate('/appointments');
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to cancel appointment.');
         } finally {
@@ -66,6 +72,7 @@ const CancelAppointment = () => {
                             variant="danger"
                             onClick={handleCancel}
                             disabled={loading}
+                            style={{ backgroundColor: '#F44336', borderColor: '#F44336', color: 'white' }} // ✅ Red with white text
                         >
                             {loading ? 'Cancelling...' : 'Yes, Cancel'}
                         </Button>
