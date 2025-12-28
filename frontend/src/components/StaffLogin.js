@@ -40,28 +40,33 @@ const StaffLogin = () => {
         alignItems: "center",
         minHeight: "100vh",
         fontFamily: "'Poppins', sans-serif",
-        background: "radial-gradient(circle at top left, #4ade80, #22d3ee, #6366f1)",
-        backgroundSize: "300% 300%",
-        animation: "gradientMove 15s ease infinite",
+        backgroundImage: "url('/login-bg.jpg')", // Add your background image in public folder
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <style>
-        {`
-          @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}
-      </style>
+      {/* Overlay for better readability */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 80, 0.5)",
+          zIndex: 1,
+        }}
+      />
 
       <form
         onSubmit={handleLogin}
         style={{
-          backgroundColor: "#ffffffee",
+          position: "relative",
+          zIndex: 2,
+          backgroundColor: "rgba(255, 255, 255, 0.2)",
           padding: "50px 40px",
           borderRadius: "20px",
-          boxShadow: "0 20px 50px rgba(0,0,0,0.2)",
+          boxShadow: "0 25px 60px rgba(0,0,0,0.3)",
           width: "100%",
           maxWidth: "420px",
           display: "flex",
@@ -73,22 +78,22 @@ const StaffLogin = () => {
         <h2
           style={{
             textAlign: "center",
-            fontSize: "2.2rem",
-            fontWeight: "800",
-            background: "linear-gradient(90deg,#22d3ee,#6366f1)",
+            fontSize: "2.5rem",
+            fontWeight: "900",
+            background: "linear-gradient(90deg,#1e3a8a,#3b82f6)",
             WebkitBackgroundClip: "text",
             color: "transparent",
             marginBottom: "10px",
           }}
         >
-          Staff Login
+          Sign In 👤
         </h2>
 
         <p
           style={{
             textAlign: "center",
-            color: "#6b7280",
-            fontSize: "0.95rem",
+            color: "#21354bff",
+            fontSize: "1rem",
             marginBottom: "20px",
           }}
         >
@@ -98,7 +103,7 @@ const StaffLogin = () => {
         {error && (
           <p
             style={{
-              color: "#ef4444",
+              color: "#b91c1c",
               textAlign: "center",
               fontWeight: "600",
               backgroundColor: "#fee2e2",
@@ -113,38 +118,38 @@ const StaffLogin = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
           <input
             type="email"
-            placeholder="Email"
+            placeholder="✉️ Email "
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             style={{
               padding: "15px 18px",
               borderRadius: "12px",
-              border: "1px solid #cbd5e1",
+              border: "1px solid #93c5fd",
               outline: "none",
               fontSize: "1rem",
               transition: "all 0.3s ease",
             }}
-            onFocus={(e) => (e.target.style.borderColor = "#22d3ee")}
-            onBlur={(e) => (e.target.style.borderColor = "#cbd5e1")}
+            onFocus={(e) => (e.target.style.borderColor = "#3b82f6")}
+            onBlur={(e) => (e.target.style.borderColor = "#93c5fd")}
           />
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder="🗝️ Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             style={{
               padding: "15px 18px",
               borderRadius: "12px",
-              border: "1px solid #cbd5e1",
+              border: "1px solid #93c5fd",
               outline: "none",
               fontSize: "1rem",
               transition: "all 0.3s ease",
             }}
-            onFocus={(e) => (e.target.style.borderColor = "#22d3ee")}
-            onBlur={(e) => (e.target.style.borderColor = "#cbd5e1")}
+            onFocus={(e) => (e.target.style.borderColor = "#3b82f6")}
+            onBlur={(e) => (e.target.style.borderColor = "#93c5fd")}
           />
         </div>
 
@@ -156,33 +161,35 @@ const StaffLogin = () => {
             fontWeight: "700",
             fontSize: "1.1rem",
             cursor: "pointer",
-            background: "linear-gradient(90deg,#22d3ee,#6366f1)",
+            background: "linear-gradient(90deg,#3b82f6,#1e40af)",
             color: "#fff",
             border: "none",
             transition: "all 0.3s ease",
-            boxShadow: "0 8px 20px rgba(34,211,238,0.3)",
+            boxShadow: "0 10px 25px rgba(30,58,138,0.4)",
           }}
           onMouseEnter={(e) => {
-            e.target.style.boxShadow = "0 12px 30px rgba(34,211,238,0.5)";
+            e.target.style.boxShadow = "0 14px 35px rgba(30,58,138,0.6)";
+            e.target.style.transform = "translateY(-3px)";
           }}
           onMouseLeave={(e) => {
-            e.target.style.boxShadow = "0 8px 20px rgba(34,211,238,0.3)";
+            e.target.style.boxShadow = "0 10px 25px rgba(30,58,138,0.4)";
+            e.target.style.transform = "translateY(0)";
           }}
         >
-          Login
+          Login ➡️
         </button>
 
         <p
           style={{
             textAlign: "center",
             fontSize: "0.85rem",
-            color: "#9ca3af",
+            color: "#21354bff",
             marginTop: "5px",
           }}
         >
           Forgot your password?{" "}
           <span
-            style={{ color: "#22d3ee", cursor: "pointer" }}
+            style={{ color: "#003c9cff", cursor: "pointer" }}
             onClick={() => alert("Password reset flow")}
           >
             Reset here

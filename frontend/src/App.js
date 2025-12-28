@@ -11,13 +11,16 @@ import UpdateRecordForm from "./components/UpdateRecordForm";
 import RecordUpdatedSuccess from "./components/RecordUpdatedSuccess";
 import StaffLogin from "./components/StaffLogin";
 import Analyze from "./components/Analyze";
+import HomePageNew from "./components/HomePageNew";
+import AboutUs from "./components/AboutUs";
 
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<StaffLogin />} />
+        <Route path="/" element={<HomePageNew />} />
+        <Route path="/login" element={<StaffLogin />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/search-patients" element={<SearchPatients />} />
         <Route path="/scan-health-card" element={<ScanHealthCard />} />
@@ -27,6 +30,7 @@ function App() {
         <Route path="/update-medical-record/:recordId" element={<UpdateRecordForm />} />
         <Route path="/record-updated-success" element={<RecordUpdatedSuccess />} />
         <Route path="/analyze" element={<Analyze />} />
+        <Route path="/about-us" element={<AboutUs />} />
         
       </Routes>
     </Router>
